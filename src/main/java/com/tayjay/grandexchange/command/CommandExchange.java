@@ -1,10 +1,13 @@
 package com.tayjay.grandexchange.command;
 
+import com.tayjay.grandexchange.GrandExchange;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextComponentString;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -45,11 +48,24 @@ public class CommandExchange implements ICommand
     @Override
     public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
     {
-        if (args[1] != null)
+        if (args[0] != null)
         {
-            if ("getplayer".equals(args[1]))
+            if ("getplayer".equals(args[0]))
             {
-
+                if (sender == null)
+                {
+                    System.out.println("Command sender null.");
+                }
+                if (GrandExchange.exchangeConnection == null)
+                {
+                    System.out.println("No exchange connection.");
+                }
+                if(args.length<2 || args[1]==null)
+                {
+                    System.out.println("Missing last argument.");
+                }
+                GrandExchange.exchangeConnection.getPlayerFromExchange(((EntityPlayerMP) sender),args[1], ((EntityPlayerMP) sender).getUniqueID());
+                //sender.addChatMessage(new TextComponentString(args[1]));
             }
         }
     }

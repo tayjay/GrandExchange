@@ -1,5 +1,11 @@
 package com.tayjay.grandexchange.external;
 
+import com.tayjay.grandexchange.GrandExchange;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -7,6 +13,9 @@ import java.io.Reader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -15,6 +24,36 @@ import java.util.UUID;
  */
 public class ExchangeConnection
 {
+    List<ITask> tasks;
+
+    public ExchangeConnection()
+    {
+        this.tasks = new ArrayList<ITask>();
+    }
+
+    public void updateTasksOnGameLoop()
+    {
+        Iterator<ITask> it = tasks.iterator();
+        ITask task;
+        while(it.hasNext())
+        {
+            task = it.next();
+            task.update();
+            if(task.isDone())
+                it.remove();
+        }
+    }
+
+    public void registerTask(ITask task)
+    {
+        tasks.add(task);
+        task.start();
+    }
+
+    public void getPlayerFromExchange(EntityPlayerMP requester, String name, UUID uuid)
+    {
+        registerTask(new TaskGetPlayer(requester,name,uuid));
+    }
 
     /*public static boolean sendExchangePacket(String sending)
     {

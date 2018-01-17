@@ -10,22 +10,22 @@ public class ReqGetPlayer extends ExchangePacket
 {
     String name,uuid;
 
-    public ReqGetPlayer(String nameIn,UUID uuidIn)
+    public ReqGetPlayer(String nameIn,String uuidIn)
     {
         super(0);
         this.name = nameIn;
-        this.uuid = uuidIn.toString();
+        this.uuid = uuidIn;
     }
 
     @Override
     public void processPacket(String packet)
     {
-
+        //Create a new thread and make new connection to exchange
     }
 
     @Override
     public String createPacket()
     {
-        return "opcode="+opcode+"&name="+name+"&uuid=";
+        return "opcode="+opcode+"&name="+name+"&uuid="+uuid;
     }
 }
