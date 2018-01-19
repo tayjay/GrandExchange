@@ -20,7 +20,7 @@ public class ReqGetPlayer extends ExchangePacket
     @Override
     public void processPacket(String packet)
     {
-        //Create a new thread and make new connection to exchange
+        //noop
     }
 
     @Override

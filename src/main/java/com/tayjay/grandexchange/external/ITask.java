@@ -15,6 +15,7 @@ public interface ITask
     public boolean isDone();
 
     public void finish();
+    public <T extends ExchangePacket> T output();
 
     public EntityPlayerMP getRequester();
 }
