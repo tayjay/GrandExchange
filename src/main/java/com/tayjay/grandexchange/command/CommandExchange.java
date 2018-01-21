@@ -1,6 +1,7 @@
 package com.tayjay.grandexchange.command;
 
 import com.tayjay.grandexchange.GrandExchange;
+import com.tayjay.grandexchange.external.TaskTest;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
@@ -66,6 +67,10 @@ public class CommandExchange implements ICommand
                 }
                 GrandExchange.exchangeConnection.getPlayerFromExchange(((EntityPlayerMP) sender),args[1], ((EntityPlayerMP) sender).getUniqueID());
                 //sender.addChatMessage(new TextComponentString(args[1]));
+            } else if ("ping".equals(args[0]))
+            {
+                sender.addChatMessage(new TextComponentString("Sending a ping!"));
+                new TaskTest().start();
             }
         }
     }
