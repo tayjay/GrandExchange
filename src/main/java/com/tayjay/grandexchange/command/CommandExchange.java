@@ -1,14 +1,23 @@
 package com.tayjay.grandexchange.command;
 
+import com.google.gson.JsonObject;
 import com.tayjay.grandexchange.GrandExchange;
-import com.tayjay.grandexchange.external.TaskTest;
+
+import com.tayjay.grandexchange.external.ExchangeItem;
+import com.tayjay.grandexchange.external.tasks.TaskTest;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
+import net.minecraft.entity.item.EntityItem;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.JsonToNBT;
+import net.minecraft.nbt.NBTException;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.event.HoverEvent;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -57,20 +66,39 @@ public class CommandExchange implements ICommand
                 {
                     System.out.println("Command sender null.");
                 }
-                if (GrandExchange.exchangeConnection == null)
+                else if (GrandExchange.exchangeConnection == null)
                 {
                     System.out.println("No exchange connection.");
                 }
-                if(args.length<2 || args[1]==null)
+                else if(args.length<2 || args[1]==null)
                 {
                     System.out.println("Missing last argument.");
                 }
-                GrandExchange.exchangeConnection.getPlayerFromExchange(((EntityPlayerMP) sender),args[1], ((EntityPlayerMP) sender).getUniqueID());
-                //sender.addChatMessage(new TextComponentString(args[1]));
+                else
+                {
+                    GrandExchange.exchangeConnection.getPlayerFromExchange(((EntityPlayerMP) sender), args[1]);
+                }
             } else if ("ping".equals(args[0]))
             {
                 sender.addChatMessage(new TextComponentString("Sending a ping!"));
-                new TaskTest().start();
+
+                if(args.length<2 || args[1]==null)
+                    GrandExchange.exchangeConnection.sendTestToExchange(((EntityPlayerMP) sender),"Ping");
+                else
+                    GrandExchange.exchangeConnection.sendTestToExchange(((EntityPlayerMP) sender),args[1]);
+            } else if ("test".equals(args[0]))
+            {
+                if (((EntityPlayer) sender.getCommandSenderEntity()).getHeldItemMainhand() != null)
+                {
+                    ExchangeItem item = new ExchangeItem(((EntityPlayer) sender.getCommandSenderEntity()).getHeldItemMainhand());
+                    /*TextComponentString chat = new TextComponentString(item.toString());
+                    chat.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponentString("This\nIs\nAn\nItem")));//item.item_nbt.toString()
+                    sender.addChatMessage(chat);
+                    EntityPlayer p = ((EntityPlayer) sender.getCommandSenderEntity());*/
+                    //p.worldObj.spawnEntityInWorld(new EntityItem(p.worldObj,p.posX,p.posY,p.posZ, ItemStack.loadItemStackFromNBT(JsonToNBT.getTagFromJson("{id:\"minecraft:iron_chestplate\",Count:1b,Damage:0s}"))));
+                    //item.nbt_string = item.nbt_string.concat("HKJLH");
+                    sender.addChatMessage(item.getChatComponent());
+                }
             }
         }
     }

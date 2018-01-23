@@ -1,4 +1,4 @@
-package com.tayjay.grandexchange.external;
+package com.tayjay.grandexchange.external.packets;
 
 /**
  * Created by tayjay on 2018-01-14.

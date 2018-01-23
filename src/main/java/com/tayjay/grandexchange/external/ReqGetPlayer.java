@@ -1,6 +1,6 @@
 package com.tayjay.grandexchange.external;
 
-import java.util.UUID;
+import com.tayjay.grandexchange.external.packets.ExchangePacket;
 
 /**
  * Created by tayjay on 2018-01-14.

@@ -1,9 +1,15 @@
 package com.tayjay.grandexchange.external;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.*;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.event.HoverEvent;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.FMLCommonHandler;
@@ -17,8 +23,8 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
  */
 public class ExchangeItem
 {
-    String disp_name,reg_name,mod_name,mc_version,nbt_string;
-    NBTTagCompound item_nbt;
+    public String disp_name,reg_name,mod_name,mc_version,nbt_string;
+    public NBTTagCompound item_nbt;
 
     public ExchangeItem(ItemStack stack)
     {
@@ -28,6 +34,25 @@ public class ExchangeItem
         reg_name = stack.getItem().getRegistryName().getResourcePath();
         mod_name = stack.getItem().getRegistryName().getResourceDomain();
         mc_version = MinecraftForge.MC_VERSION;
+    }
+
+    public ExchangeItem(String input)
+    {
+        //break up string into components
+    }
+
+    public String toString()
+    {
+        JsonObject object = new JsonObject();
+        object.addProperty("disp_name",disp_name);
+        object.addProperty("reg_name",reg_name);
+        object.addProperty("mod_name",mod_name);
+        object.addProperty("mc_version",mc_version);
+        object.addProperty("nbt_string",nbt_string);
+
+        //String returning = "{\"disp_name\":\"%s\",\"reg_name\":\"%s\",\"mod_name\":\"%s\",\"mc_version\":\"%s\",\"nbt_string\":\"%s\"}";
+
+        return object.toString();
     }
 
     public ItemStack createItemStack()
@@ -71,5 +96,20 @@ public class ExchangeItem
         }
 
         return null;
+    }
+
+    public ITextComponent getChatComponent()
+    {
+        TextComponentString chat = new TextComponentString(disp_name);
+        if(createItemStack()!=null)
+        {
+            chat.getStyle().setColor(TextFormatting.DARK_GREEN);
+            chat.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_ITEM, new TextComponentString(nbt_string)));
+        } else{
+
+            chat.getStyle().setColor(TextFormatting.DARK_RED);
+            chat.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponentString(disp_name + "\n" + reg_name + "\n" + mod_name + "\n" + mc_version+"\nInvalid Item")));//item.item_nbt.toString()
+        }
+        return chat;
     }
 }

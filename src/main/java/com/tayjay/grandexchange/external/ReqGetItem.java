@@ -1,5 +1,7 @@
 package com.tayjay.grandexchange.external;
 
+import com.tayjay.grandexchange.external.packets.ExchangePacket;
+
 /**
  * Created by tayjay on 2018-01-18.
  */
