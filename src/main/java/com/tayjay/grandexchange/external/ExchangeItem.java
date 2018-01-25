@@ -2,6 +2,8 @@ package com.tayjay.grandexchange.external;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.sun.org.apache.regexp.internal.RE;
+import com.tayjay.grandexchange.lib.Ref;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.*;
@@ -36,19 +38,31 @@ public class ExchangeItem
         mc_version = MinecraftForge.MC_VERSION;
     }
 
-    public ExchangeItem(String input)
+    public ExchangeItem(JsonObject object)
     {
-        //break up string into components
+        disp_name = object.get(Ref.DISPLAY_NAME).getAsString();
+        reg_name = object.get(Ref.REGISTRY_NAME).getAsString();
+        mod_name = object.get(Ref.MOD_NAME).getAsString();
+        mc_version = object.get(Ref.MC_VERSION).getAsString();
+        nbt_string = object.get(Ref.ITEM_NBT).getAsString();
+        try
+        {
+            item_nbt = JsonToNBT.getTagFromJson(nbt_string);
+        } catch (NBTException e)
+        {
+            e.printStackTrace();
+            item_nbt = null;
+        }
     }
 
     public String toString()
     {
         JsonObject object = new JsonObject();
-        object.addProperty("disp_name",disp_name);
-        object.addProperty("reg_name",reg_name);
-        object.addProperty("mod_name",mod_name);
-        object.addProperty("mc_version",mc_version);
-        object.addProperty("nbt_string",nbt_string);
+        object.addProperty(Ref.DISPLAY_NAME,disp_name);
+        object.addProperty(Ref.REGISTRY_NAME,reg_name);
+        object.addProperty(Ref.MOD_NAME,mod_name);
+        object.addProperty(Ref.MC_VERSION,mc_version);
+        object.addProperty(Ref.ITEM_NBT,nbt_string);
 
         //String returning = "{\"disp_name\":\"%s\",\"reg_name\":\"%s\",\"mod_name\":\"%s\",\"mc_version\":\"%s\",\"nbt_string\":\"%s\"}";
 

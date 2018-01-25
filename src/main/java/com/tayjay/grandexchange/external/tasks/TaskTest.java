@@ -1,8 +1,12 @@
 package com.tayjay.grandexchange.external.tasks;
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.tayjay.grandexchange.lib.Ref;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.JsonToNBT;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.event.HoverEvent;
@@ -57,13 +61,18 @@ public class TaskTest extends TaskBase<String>
             System.out.println("Streams created, connection established.");
 
             //Tell server this is a test packet
-            out.write(0+"\n");
+            JsonObject request = new JsonObject();
+            request.addProperty(Ref.REQUEST,Ref.TEST_PACKET);
+            request.addProperty("message",this.sending);
+            out.write(request.toString()+"\n");
             out.flush();
 
 
             out.write(sending+"\n");
             out.flush();
             String returning = in.nextLine();
+            JsonObject response = new JsonParser().parse(returning).getAsJsonObject();
+            returning = response.get(Ref.RESPONSE).getAsString();
 
             System.out.println(returning);
             return returning;
