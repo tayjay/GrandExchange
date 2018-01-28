@@ -1,9 +1,9 @@
 package com.tayjay.grandexchange.external;
 
-import com.tayjay.grandexchange.external.tasks.ITask;
-import com.tayjay.grandexchange.external.tasks.TaskGetPlayer;
-import com.tayjay.grandexchange.external.tasks.TaskTest;
+import com.tayjay.grandexchange.external.tasks.*;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.item.ItemStack;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -45,6 +45,26 @@ public class ExchangeConnection
     public void getPlayerFromExchange(EntityPlayerMP requester, String name)//, UUID uuid
     {
         registerTask(new TaskGetPlayer(requester,name));
+    }
+
+    public void createPlayerOnExchange(EntityPlayerMP requester, String username, String uuid)
+    {
+        registerTask(new TaskCreatePlayer(requester,username,uuid));
+    }
+
+    public void listItemsOnExchange(EntityPlayerMP requester, String username)
+    {
+        registerTask(new TaskGetItems(requester, username, UUID.randomUUID()));
+    }
+
+    public void offerItemToExchange(EntityPlayerMP requester, ItemStack stack,int slot, String username)
+    {
+        registerTask(new TaskOfferItem(requester,stack,slot,username));
+    }
+
+    public void requestItemFromExchange(EntityPlayerMP requester, int slot, String username)
+    {
+        registerTask(new TaskRequestItem(requester,slot,username));
     }
 
     public void sendTestToExchange(EntityPlayerMP requester, String toSend)

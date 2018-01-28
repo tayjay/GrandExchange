@@ -17,15 +17,16 @@ import java.util.Scanner;
 import java.util.concurrent.ExecutionException;
 
 /**
- * Created by tayjay on 2018-01-21.
+ * Created by tayjay on 2018-01-25.
  */
-public class TaskGetPlayer extends TaskBase<String>
+public class TaskCreatePlayer extends TaskBase<String>
 {
-    String name;
-    public TaskGetPlayer(EntityPlayerMP requester,String name)
+    String username,uuid;
+    public TaskCreatePlayer(EntityPlayerMP requester,String username, String uuid)
     {
         super(requester);
-        this.name = name;
+        this.username = username;
+        this.uuid = uuid;
     }
 
     @Override
@@ -33,11 +34,14 @@ public class TaskGetPlayer extends TaskBase<String>
     {
         initConnection();
         JsonObject request = new JsonObject();
-        request.addProperty(Ref.REQUEST,Ref.GET_PLAYER_PACKET);
-        request.addProperty(Ref.USERNAME, this.name);
+        request.addProperty(Ref.REQUEST,Ref.CREATE_PLAYER_PACKET);
+        //request.addProperty(Ref.USERNAME, this.requester.getName());
+        //request.addProperty(Ref.UUID,this.requester.getUniqueID().toString());
+        request.addProperty(Ref.USERNAME, this.username);
+        request.addProperty(Ref.UUID, this.uuid);
 
         sendRequest(request);
-
+        //Wait for exchange to created player entry
         JsonObject response = getRepsonse();
 
         if (response.get(Ref.ERROR) != null)
@@ -47,20 +51,15 @@ public class TaskGetPlayer extends TaskBase<String>
         }else
         {
             JsonElement code = response.get(Ref.RESPONSE);//String describing result
-            if (code != null && code.getAsBoolean())
+            if (code != null)
             {
-                String nameElement = response.get(Ref.USERNAME).getAsString();
-                int index = response.get(Ref.PLAYER_ID).getAsInt();
-
-
-                return "Found "+nameElement+" at index "+index;
-
-
+                return code.getAsString();
             }else{
-                String nameElement = response.get(Ref.USERNAME).getAsString();
-                return "Could not find "+nameElement+" in database.";
+
             }
         }
+
+        return null;
     }
 
     @Override
@@ -83,11 +82,22 @@ public class TaskGetPlayer extends TaskBase<String>
     {
         try
         {
-            requester.addChatComponentMessage(new TextComponentString(output.get()));
+            if (output.get() == null)
+                requester.addChatComponentMessage(new TextComponentString("Something happened."));
+            else
+            {
+                    /*ITextComponent textComponent = new TextComponentString(output.get());
+                    textComponent.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_ITEM,new TextComponentString(new ItemStack(Items.DIAMOND).serializeNBT().toString())));
+                    requester.addChatComponentMessage(textComponent);*/
+                requester.addChatComponentMessage(new TextComponentString(output.get()));
+            }
         } catch (InterruptedException e)
         {
             e.printStackTrace();
         } catch (ExecutionException e)
+        {
+            e.printStackTrace();
+        } catch (NullPointerException e)
         {
             e.printStackTrace();
         }

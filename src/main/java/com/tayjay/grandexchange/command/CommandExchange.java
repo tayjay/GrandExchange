@@ -99,6 +99,32 @@ public class CommandExchange implements ICommand
                     //item.nbt_string = item.nbt_string.concat("HKJLH");
                     sender.addChatMessage(item.getChatComponent());
                 }
+            } else if ("create".equals(args[0]))
+            {
+                if (args.length == 3)
+                {
+                    GrandExchange.exchangeConnection.createPlayerOnExchange(((EntityPlayerMP) sender),args[1],args[2]);
+                }
+            } else if ("list".equals(args[0]))
+            {
+                if (args.length == 2)
+                {
+                    GrandExchange.exchangeConnection.listItemsOnExchange(((EntityPlayerMP) sender),args[1]);
+                }
+            } else if ("setitem".equals(args[0]))
+            {
+                if (args.length == 3)
+                {
+                    int slot = Integer.parseInt(args[1]);
+                    GrandExchange.exchangeConnection.offerItemToExchange(((EntityPlayerMP) sender),((EntityPlayerMP) sender).getHeldItemMainhand(),slot,args[2]);
+                }
+            } else if ("getitem".equals(args[0]))
+            {
+                if (args.length == 3)
+                {
+                    int slot = Integer.parseInt(args[1]);
+                    GrandExchange.exchangeConnection.requestItemFromExchange(((EntityPlayerMP) sender),slot,args[2]);
+                }
             }
         }
     }

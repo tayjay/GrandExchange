@@ -7,6 +7,7 @@ import com.google.gson.JsonParser;
 import com.tayjay.grandexchange.external.ExchangeItem;
 import com.tayjay.grandexchange.lib.Ref;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.util.text.TextComponentString;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -17,11 +18,12 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Scanner;
 import java.util.UUID;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Created by tayjay on 2018-01-22.
  */
-public class TaskGetItems extends TaskBase<ExchangeItem[]>
+public class TaskGetItems extends TaskBase<ArrayList<ExchangeItem>>
 {
     String name,uuid;
     public TaskGetItems(EntityPlayerMP requester,String name,UUID uuid)
@@ -32,29 +34,22 @@ public class TaskGetItems extends TaskBase<ExchangeItem[]>
     }
 
     @Override
-    protected ExchangeItem[] runInThread()
+    protected ArrayList<ExchangeItem> runInThread()
     {
-        Socket socket = null;
-        ArrayList<ExchangeItem> exchangeItems = new ArrayList<ExchangeItem>(10);
         try
         {
-            socket = new Socket("138.68.12.167", 20123);
-            InputStream inputStream = socket.getInputStream();
-            OutputStream outputStream = socket.getOutputStream();
-
-            Scanner in = new Scanner(inputStream);
-            PrintWriter out = new PrintWriter(outputStream);
+            initConnection();
+            ArrayList<ExchangeItem> exchangeItems = new ArrayList<ExchangeItem>(10);
 
             JsonObject request = new JsonObject();
             request.addProperty(Ref.REQUEST, Ref.GET_ITEMS_PACKET);
             request.addProperty(Ref.USERNAME, this.name);
             request.addProperty(Ref.UUID, this.uuid);
 
-            out.write(request.toString() + "\n");
-            out.flush();
+            sendRequest(request);
 
-            String resStr = in.nextLine();
-            JsonObject response = new JsonParser().parse(resStr).getAsJsonObject();
+            JsonObject response = getRepsonse();
+
             if (response.get(Ref.ERROR) != null)
             {
                 System.out.println(response.get(Ref.ERROR).getAsString());
@@ -66,18 +61,15 @@ public class TaskGetItems extends TaskBase<ExchangeItem[]>
             while (itemIterator.hasNext())
             {
                 currentItem = itemIterator.next();
+                System.out.println("Adding item " + currentItem.toString());
                 exchangeItems.add(new ExchangeItem(currentItem.getAsJsonObject()));
             }
-
-            return (ExchangeItem[]) exchangeItems.toArray();
-
-
-        } catch (IOException e)
+            System.out.println("Leaving the loop. " + exchangeItems.toString());
+            return exchangeItems;
+        } catch (Exception e)
         {
             e.printStackTrace();
         }
-
-
         return null;
     }
 
@@ -99,6 +91,34 @@ public class TaskGetItems extends TaskBase<ExchangeItem[]>
     @Override
     public void finish()
     {
+        try
+        {
+            if (output.get() == null)
+            {
+                requester.addChatComponentMessage(new TextComponentString("Error when getting items."));
+            }
+            else
+            {
+                ArrayList<ExchangeItem> items = output.get();
+                requester.addChatComponentMessage(new TextComponentString("Got items..."));
+                for(int i=0;i<items.size();i++)
+                {
+                    ExchangeItem item = items.get(i);
+                    item.setSlot(i);
+                    requester.addChatComponentMessage(item.getChatComponent());
+                }
+                for (ExchangeItem item : items)
+                {
+
+                }
+            }
+        } catch (InterruptedException e)
+        {
+            e.printStackTrace();
+        } catch (ExecutionException e)
+        {
+            e.printStackTrace();
+        }
 
     }
 }

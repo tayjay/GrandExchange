@@ -49,43 +49,22 @@ public class TaskTest extends TaskBase<String>
     protected String runInThread()
     {
         System.out.println("Starting to send.");
-        try
-        {
-            Socket socket = new Socket("138.68.12.167", 20123);
-            InputStream inputStream = socket.getInputStream();
-            OutputStream outputStream = socket.getOutputStream();
 
-            Scanner in = new Scanner(inputStream);
-            PrintWriter out = new PrintWriter(outputStream);
+        initConnection();
 
-            System.out.println("Streams created, connection established.");
+        long currentTime = System.currentTimeMillis();
+        //Tell server this is a test packet
+        JsonObject request = new JsonObject();
+        request.addProperty(Ref.REQUEST,Ref.TEST_PACKET);
+        request.addProperty("message",this.sending);
+        sendRequest(request);
 
-            //Tell server this is a test packet
-            JsonObject request = new JsonObject();
-            request.addProperty(Ref.REQUEST,Ref.TEST_PACKET);
-            request.addProperty("message",this.sending);
-            out.write(request.toString()+"\n");
-            out.flush();
+        JsonObject response = getRepsonse();
+        String returning = response.get(Ref.RESPONSE).getAsString();
 
+        System.out.println(returning);
+        return returning+" || Took "+(System.currentTimeMillis()-currentTime)+"ms";
 
-            out.write(sending+"\n");
-            out.flush();
-            String returning = in.nextLine();
-            JsonObject response = new JsonParser().parse(returning).getAsJsonObject();
-            returning = response.get(Ref.RESPONSE).getAsString();
-
-            System.out.println(returning);
-            return returning;
-        } catch (IOException e)
-        {
-            e.printStackTrace();
-        } catch (Exception e)
-        {
-            e.printStackTrace();
-            System.out.println("SOMETHING HAPPENED!!!");
-        }
-
-        return null;
     }
 
     @Override

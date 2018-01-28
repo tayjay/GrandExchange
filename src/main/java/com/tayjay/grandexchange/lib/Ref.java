@@ -13,6 +13,8 @@ public class Ref
     public static final int GET_ITEM_IN_SLOT_PACKET = 8;
     public static final int REQUEST_ITEM_PACKET = 10;
     public static final int OFFER_ITEM_PACKET = 12;
+    public static final int CONFIRM_ITEM_VALID_PACKET = 14;
+
 
 
     //Packet Types
@@ -26,6 +28,8 @@ public class Ref
     public static final String UUID = "uuid";
     public static final String SLOT = "slot";
     public static final String ITEMS = "items";
+    public static final String EXCHANGE_ITEM = "exchange_item";
+    public static final String VALID = "valid";
 
     //Database references
     public static final String DISPLAY_NAME = "disp_name";

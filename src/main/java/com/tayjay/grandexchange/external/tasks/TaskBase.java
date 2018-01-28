@@ -1,8 +1,15 @@
 package com.tayjay.grandexchange.external.tasks;
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import net.minecraft.entity.player.EntityPlayerMP;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.Scanner;
 import java.util.concurrent.*;
 
 /**
@@ -12,10 +19,31 @@ public abstract class TaskBase<T> implements ITask
 {
     protected Future<T> output;
     protected EntityPlayerMP requester;
+    protected Socket socket;
+    protected Scanner in;
+    protected PrintWriter out;
 
     public TaskBase(EntityPlayerMP requester)
     {
         this.requester = requester;
+    }
+
+    protected void initConnection()
+    {
+        try
+        {
+            socket = new Socket("138.68.12.167", 20123);
+            socket.setSoTimeout(3000);
+            InputStream inputStream = socket.getInputStream();
+            OutputStream outputStream = socket.getOutputStream();
+
+            in = new Scanner(inputStream);
+            out = new PrintWriter(outputStream);
+        } catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+
     }
 
     protected void startThread()
@@ -59,6 +87,19 @@ public abstract class TaskBase<T> implements ITask
         return null;
     }
 
+    JsonParser parser = new JsonParser();
+    protected JsonObject getRepsonse()
+    {
+        String resStr = in.nextLine();
+        JsonObject response = parser.parse(resStr).getAsJsonObject();
+        return response;
+    }
+
+    protected void sendRequest(JsonObject request)
+    {
+        out.write(request.toString() + "\n");
+        out.flush();
+    }
 
 
     @Override
