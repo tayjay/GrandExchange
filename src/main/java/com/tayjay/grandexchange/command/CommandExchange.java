@@ -125,6 +125,9 @@ public class CommandExchange implements ICommand
                     int slot = Integer.parseInt(args[1]);
                     GrandExchange.exchangeConnection.requestItemFromExchange(((EntityPlayerMP) sender),slot,args[2]);
                 }
+            } else if ("client".equals(args[0]))
+            {
+                GrandExchange.exchangeConnection.sendClientObject(((EntityPlayerMP) sender));
             }
         }
     }

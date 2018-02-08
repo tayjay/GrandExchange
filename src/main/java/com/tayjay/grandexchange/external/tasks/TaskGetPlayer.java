@@ -2,18 +2,10 @@ package com.tayjay.grandexchange.external.tasks;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import com.tayjay.grandexchange.lib.Ref;
+import com.tayjay.gecommon.Ref;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.text.TextComponentString;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.PrintWriter;
-import java.net.Socket;
-import java.net.UnknownHostException;
-import java.util.Scanner;
 import java.util.concurrent.ExecutionException;
 
 /**
@@ -33,7 +25,7 @@ public class TaskGetPlayer extends TaskBase<String>
     {
         initConnection();
         JsonObject request = new JsonObject();
-        request.addProperty(Ref.REQUEST,Ref.GET_PLAYER_PACKET);
+        request.addProperty(Ref.REQUEST, Ref.GET_PLAYER_PACKET);
         request.addProperty(Ref.USERNAME, this.name);
 
         sendRequest(request);

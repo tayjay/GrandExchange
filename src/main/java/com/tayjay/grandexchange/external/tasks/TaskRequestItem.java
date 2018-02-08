@@ -1,8 +1,8 @@
 package com.tayjay.grandexchange.external.tasks;
 
 import com.google.gson.JsonObject;
+import com.tayjay.gecommon.Ref;
 import com.tayjay.grandexchange.external.ExchangeItem;
-import com.tayjay.grandexchange.lib.Ref;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.text.TextComponentString;

@@ -72,5 +72,8 @@ public class ExchangeConnection
         registerTask(new TaskTest(requester, toSend));
     }
 
-
+    public void sendClientObject(EntityPlayerMP requester)
+    {
+        registerTask(new TaskTransferObject(requester));
+    }
 }

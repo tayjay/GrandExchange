@@ -34,6 +34,7 @@ public abstract class TaskBase<T> implements ITask
         {
             socket = new Socket("138.68.12.167", 20123);
             socket.setSoTimeout(3000);
+            System.out.println("Socket Connected: "+socket.isConnected());
             InputStream inputStream = socket.getInputStream();
             OutputStream outputStream = socket.getOutputStream();
 

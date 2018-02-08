@@ -1,7 +1,8 @@
-package com.tayjay.grandexchange.lib;
+package com.tayjay.gecommon;
 
 /**
  * Created by tayjay on 2018-01-24.
+ * Reference class synced with both sides
  */
 public class Ref
 {
@@ -15,7 +16,11 @@ public class Ref
     public static final int OFFER_ITEM_PACKET = 12;
     public static final int CONFIRM_ITEM_VALID_PACKET = 14;
 
-
+    public enum RequestType
+    {
+        TEST_PACKET,GET_PLAYER_PACKET,GET_ITEMS_PACKET,CREATE_PLAYER_PACKET,GET_ITEM_IN_SLOT_PACKET
+        ,REQUEST_ITEM_PACKET,OFFER_ITEM_PACKET,CONFIRM_ITEM_VALID_PACKET,ECHO_CLIENT
+    }
 
     //Packet Types
     public static final String REQUEST = "request";
@@ -37,7 +42,4 @@ public class Ref
     public static final String MOD_NAME = "mod_name";
     public static final String MC_VERSION = "mc_version";
     public static final String ITEM_NBT = "nbt";
-
-
-
 }

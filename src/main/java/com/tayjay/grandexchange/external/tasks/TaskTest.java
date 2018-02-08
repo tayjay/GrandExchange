@@ -1,23 +1,11 @@
 package com.tayjay.grandexchange.external.tasks;
 
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import com.tayjay.grandexchange.lib.Ref;
+import com.tayjay.gecommon.Ref;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.init.Items;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.JsonToNBT;
-import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
-import net.minecraft.util.text.event.HoverEvent;
 
-import java.io.*;
-import java.net.Socket;
-import java.util.Scanner;
-import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 /**
  * Created by tayjay on 2018-01-21.
@@ -55,7 +43,7 @@ public class TaskTest extends TaskBase<String>
         long currentTime = System.currentTimeMillis();
         //Tell server this is a test packet
         JsonObject request = new JsonObject();
-        request.addProperty(Ref.REQUEST,Ref.TEST_PACKET);
+        request.addProperty(Ref.REQUEST, Ref.TEST_PACKET);
         request.addProperty("message",this.sending);
         sendRequest(request);
 
