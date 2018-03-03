@@ -1,23 +1,19 @@
 package com.tayjay.grandexchange.command;
 
-import com.google.gson.JsonObject;
 import com.tayjay.grandexchange.GrandExchange;
 
-import com.tayjay.grandexchange.external.ExchangeItem;
-import com.tayjay.grandexchange.external.tasks.TaskTest;
+import com.tayjay.gecommon.ExchangeItem;
+import com.tayjay.grandexchange.util.CommonUtil;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.JsonToNBT;
-import net.minecraft.nbt.NBTException;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
-import net.minecraft.util.text.event.HoverEvent;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -90,14 +86,14 @@ public class CommandExchange implements ICommand
             {
                 if (((EntityPlayer) sender.getCommandSenderEntity()).getHeldItemMainhand() != null)
                 {
-                    ExchangeItem item = new ExchangeItem(((EntityPlayer) sender.getCommandSenderEntity()).getHeldItemMainhand());
+                    ExchangeItem item = CommonUtil.createExchangeItem(((EntityPlayer) sender.getCommandSenderEntity()).getHeldItemMainhand());
                     /*TextComponentString chat = new TextComponentString(item.toString());
                     chat.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponentString("This\nIs\nAn\nItem")));//item.item_nbt.toString()
                     sender.addChatMessage(chat);
                     EntityPlayer p = ((EntityPlayer) sender.getCommandSenderEntity());*/
                     //p.worldObj.spawnEntityInWorld(new EntityItem(p.worldObj,p.posX,p.posY,p.posZ, ItemStack.loadItemStackFromNBT(JsonToNBT.getTagFromJson("{id:\"minecraft:iron_chestplate\",Count:1b,Damage:0s}"))));
                     //item.nbt_string = item.nbt_string.concat("HKJLH");
-                    sender.addChatMessage(item.getChatComponent());
+                    //sender.addChatMessage(item.getChatComponent());
                 }
             } else if ("create".equals(args[0]))
             {
@@ -128,6 +124,32 @@ public class CommandExchange implements ICommand
             } else if ("client".equals(args[0]))
             {
                 GrandExchange.exchangeConnection.sendClientObject(((EntityPlayerMP) sender));
+            } else if ("echo".equals(args[0]))
+            {
+                //GrandExchange.exchangeConnection.sendEchoOnChannel((EntityPlayerMP) sender);
+            } else if ("sell".equals(args[0]))
+            {
+                GrandExchange.exchangeConnection.sellItemToServer((EntityPlayerMP) sender,((EntityPlayerMP) sender).getHeldItemMainhand());
+            } else if ("buy".equals(args[0]))
+            {
+                String resource;
+                int quantity;
+                if(args.length==3)
+                {
+                    resource = args[1];
+                    quantity = Integer.parseInt(args[2]);
+                    GrandExchange.exchangeConnection.buyItemFromServer((EntityPlayerMP) sender,resource,quantity);
+                }
+                else
+                {
+                    System.out.println("Error with command.");
+                }
+            } else if ("auth".equals(args[0]))
+            {
+                GrandExchange.exchangeConnection.authPlayerToServer(((EntityPlayerMP) sender));
+            } else if ("offer".equals(args[0]))
+            {
+                GrandExchange.exchangeConnection.offerItemToMarketPlace(((EntityPlayerMP) sender), ((EntityPlayerMP) sender).getHeldItemMainhand(), Float.valueOf(args[1]));
             }
         }
     }

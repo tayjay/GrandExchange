@@ -12,7 +12,7 @@ import java.util.UUID;
 
 /**
  * Created by tayjay on 2018-01-14.
- * Handle connection to Database
+ * Handle connection to Grand Exchange
  */
 public class ExchangeConnection
 {
@@ -76,4 +76,25 @@ public class ExchangeConnection
     {
         registerTask(new TaskTransferObject(requester));
     }
+
+    public void sellItemToServer(EntityPlayerMP requester, ItemStack stack)
+    {
+        registerTask(new TaskSellResourse(requester, stack));
+    }
+
+    public void buyItemFromServer(EntityPlayerMP requester,String resource, int quantity)
+    {
+        registerTask(new TaskBuyResource(requester,resource,quantity));
+    }
+
+    public void authPlayerToServer(EntityPlayerMP requester)
+    {
+        registerTask(new TaskAuthPlayer(requester));
+    }
+
+    public void offerItemToMarketPlace(EntityPlayerMP seller, ItemStack item, float price)
+    {
+        registerTask(new TaskMarketOffer(seller,item,price));
+    }
+
 }

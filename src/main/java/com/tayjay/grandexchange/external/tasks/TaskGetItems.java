@@ -4,7 +4,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.tayjay.gecommon.Ref;
-import com.tayjay.grandexchange.external.ExchangeItem;
+import com.tayjay.gecommon.ExchangeItem;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.text.TextComponentString;
 
@@ -29,7 +29,7 @@ public class TaskGetItems extends TaskBase<ArrayList<ExchangeItem>>
     @Override
     protected ArrayList<ExchangeItem> runInThread()
     {
-        try
+        /*try
         {
             initConnection();
             ArrayList<ExchangeItem> exchangeItems = new ArrayList<ExchangeItem>(10);
@@ -62,7 +62,7 @@ public class TaskGetItems extends TaskBase<ArrayList<ExchangeItem>>
         } catch (Exception e)
         {
             e.printStackTrace();
-        }
+        }*/
         return null;
     }
 
@@ -98,7 +98,7 @@ public class TaskGetItems extends TaskBase<ArrayList<ExchangeItem>>
                 {
                     ExchangeItem item = items.get(i);
                     item.setSlot(i);
-                    requester.addChatComponentMessage(item.getChatComponent());
+                    //requester.addChatComponentMessage(item.getChatComponent());
                 }
                 for (ExchangeItem item : items)
                 {

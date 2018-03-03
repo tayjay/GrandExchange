@@ -2,7 +2,7 @@ package com.tayjay.grandexchange.external.tasks;
 
 import com.google.gson.JsonObject;
 import com.tayjay.gecommon.Ref;
-import com.tayjay.grandexchange.external.ExchangeItem;
+import com.tayjay.gecommon.ExchangeItem;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
@@ -31,7 +31,7 @@ public class TaskOfferItem extends TaskBase<Boolean>
     @Override
     protected Boolean runInThread()
     {
-        initConnection();
+        /*initConnection();
         try
         {
             socket.setSoTimeout(3000);
@@ -61,7 +61,8 @@ public class TaskOfferItem extends TaskBase<Boolean>
         {
             e.printStackTrace();
             return false;
-        }
+        }*/
+        return false;
     }
 
     @Override

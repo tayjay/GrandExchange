@@ -23,7 +23,7 @@ public class TaskGetPlayer extends TaskBase<String>
     @Override
     protected String runInThread()
     {
-        initConnection();
+        /*initConnection();
         JsonObject request = new JsonObject();
         request.addProperty(Ref.REQUEST, Ref.GET_PLAYER_PACKET);
         request.addProperty(Ref.USERNAME, this.name);
@@ -52,7 +52,8 @@ public class TaskGetPlayer extends TaskBase<String>
                 String nameElement = response.get(Ref.USERNAME).getAsString();
                 return "Could not find "+nameElement+" in database.";
             }
-        }
+        }*/
+        return null;
     }
 
     @Override

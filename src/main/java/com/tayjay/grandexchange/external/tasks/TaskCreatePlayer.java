@@ -24,7 +24,7 @@ public class TaskCreatePlayer extends TaskBase<String>
     @Override
     protected String runInThread()
     {
-        initConnection();
+        /*initConnection();
         JsonObject request = new JsonObject();
         request.addProperty(Ref.REQUEST, Ref.CREATE_PLAYER_PACKET);
         //request.addProperty(Ref.USERNAME, this.requester.getName());
@@ -49,7 +49,7 @@ public class TaskCreatePlayer extends TaskBase<String>
             }else{
 
             }
-        }
+        }*/
 
         return null;
     }

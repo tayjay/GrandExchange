@@ -2,7 +2,8 @@ package com.tayjay.grandexchange.external.tasks;
 
 import com.google.gson.JsonObject;
 import com.tayjay.gecommon.Ref;
-import com.tayjay.grandexchange.external.ExchangeItem;
+import com.tayjay.gecommon.ExchangeItem;
+import com.tayjay.grandexchange.util.CommonUtil;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.text.TextComponentString;
@@ -24,7 +25,7 @@ public class TaskRequestItem extends TaskBase<ExchangeItem>
     @Override
     protected ExchangeItem runInThread()
     {
-        initConnection();
+        /*initConnection();
 
         JsonObject request = new JsonObject();
         request.addProperty(Ref.REQUEST, Ref.REQUEST_ITEM_PACKET);
@@ -58,7 +59,7 @@ public class TaskRequestItem extends TaskBase<ExchangeItem>
             return item;
         }
         System.out.println("Confirmation failed.");
-
+*/
         return null;
     }
 
@@ -82,7 +83,8 @@ public class TaskRequestItem extends TaskBase<ExchangeItem>
     {
         if (output() != null)
         {
-            requester.worldObj.spawnEntityInWorld(new EntityItem(requester.worldObj, requester.posX, requester.posY, requester.posZ, output().createItemStack()));
+            requester.worldObj.spawnEntityInWorld(new EntityItem(requester.worldObj, requester.posX, requester.posY, requester.posZ, CommonUtil.createItemStackFromExhange(output())));
+
         }
         else
         {

@@ -2,12 +2,10 @@ package com.tayjay.grandexchange.external.tasks;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.tayjay.gecommon.packets.RequestPacket;
 import net.minecraft.entity.player.EntityPlayerMP;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.PrintWriter;
+import java.io.*;
 import java.net.Socket;
 import java.util.Scanner;
 import java.util.concurrent.*;
@@ -20,8 +18,8 @@ public abstract class TaskBase<T> implements ITask
     protected Future<T> output;
     protected EntityPlayerMP requester;
     protected Socket socket;
-    protected Scanner in;
-    protected PrintWriter out;
+    protected ObjectInputStream in;
+    protected ObjectOutputStream out;
 
     public TaskBase(EntityPlayerMP requester)
     {
@@ -33,13 +31,14 @@ public abstract class TaskBase<T> implements ITask
         try
         {
             socket = new Socket("138.68.12.167", 20123);
-            socket.setSoTimeout(3000);
+            //socket.setSoTimeout(3000);
             System.out.println("Socket Connected: "+socket.isConnected());
             InputStream inputStream = socket.getInputStream();
             OutputStream outputStream = socket.getOutputStream();
 
-            in = new Scanner(inputStream);
-            out = new PrintWriter(outputStream);
+            out = new ObjectOutputStream(outputStream);
+            in = new ObjectInputStream(inputStream);
+
         } catch (IOException e)
         {
             e.printStackTrace();
@@ -55,7 +54,17 @@ public abstract class TaskBase<T> implements ITask
             @Override
             public T call() throws Exception
             {
-                return runInThread();
+                initConnection();
+                T returning = null;
+                try
+                {
+                    returning = runInThread();
+                } catch (IOException e)
+                {
+                    e.printStackTrace();
+                }
+
+                return returning;
             }
         });
     }
@@ -65,9 +74,13 @@ public abstract class TaskBase<T> implements ITask
      * DO NOT ACCESS ANYTHING ON MC SIDE!!!
      * @return
      */
-    protected abstract T runInThread();
+    protected abstract T runInThread() throws IOException;
 
-
+    @Override
+    public void start()
+    {
+        startThread();
+    }
 
     @Override
     public T output()
@@ -88,18 +101,42 @@ public abstract class TaskBase<T> implements ITask
         return null;
     }
 
-    JsonParser parser = new JsonParser();
-    protected JsonObject getRepsonse()
+    @Override
+    public void update()
     {
-        String resStr = in.nextLine();
-        JsonObject response = parser.parse(resStr).getAsJsonObject();
+        if (isDone())
+        {
+            finish();
+        }
+    }
+
+    protected Object getRepsonse()
+    {
+        Object response = null;
+        try
+        {
+            response = in.readObject();
+        } catch (IOException e)
+        {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e)
+        {
+            e.printStackTrace();
+        }
         return response;
     }
 
-    protected void sendRequest(JsonObject request)
+    protected void sendRequest(RequestPacket request)
     {
-        out.write(request.toString() + "\n");
-        out.flush();
+        try
+        {
+            out.writeObject(request);
+            out.flush();
+        } catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+
     }
 
 

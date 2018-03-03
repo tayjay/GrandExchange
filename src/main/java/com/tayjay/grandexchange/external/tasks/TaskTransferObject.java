@@ -2,7 +2,7 @@ package com.tayjay.grandexchange.external.tasks;
 
 import com.tayjay.gecommon.ExClient;
 import com.tayjay.gecommon.Ref;
-import com.tayjay.gecommon.packets.CPacketInit;
+import com.tayjay.gecommon.packets.RequestPacket;
 import com.tayjay.grandexchange.util.CommonUtil;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.text.TextComponentString;
@@ -26,15 +26,20 @@ public class TaskTransferObject extends TaskBase<String>
     {
         try
         {
-            initConnection();
-            ObjectOutputStream outToServer = new ObjectOutputStream(socket.getOutputStream());
-            ObjectInputStream inFromServer = new ObjectInputStream(socket.getInputStream());
+            System.out.println("Transferring object, initializing connection");
 
+            System.out.println("Read/Write created.");
             ExClient client = CommonUtil.createClient(requester);
-            CPacketInit packetInit = new CPacketInit(client, Ref.RequestType.ECHO_CLIENT);
-            outToServer.writeObject(packetInit);
+            System.out.println("Client object created");
+            RequestPacket packetInit = new RequestPacket(client, Ref.RequestType.ECHO_CLIENT);
+            System.out.println("Request packet Created.");
+            out.writeObject(packetInit);
+            System.out.println("Sent request");
 
-            String response = inFromServer.readUTF();
+            String response = in.readUTF();
+            System.out.println("Got response");
+
+            socket.close();
             return response;
 
 

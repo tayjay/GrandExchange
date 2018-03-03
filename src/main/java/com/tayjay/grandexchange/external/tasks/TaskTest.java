@@ -45,14 +45,14 @@ public class TaskTest extends TaskBase<String>
         JsonObject request = new JsonObject();
         request.addProperty(Ref.REQUEST, Ref.TEST_PACKET);
         request.addProperty("message",this.sending);
-        sendRequest(request);
+        //sendRequest(request);
 
-        JsonObject response = getRepsonse();
-        String returning = response.get(Ref.RESPONSE).getAsString();
+        //JsonObject response = getRepsonse();
+        //String returning = response.get(Ref.RESPONSE).getAsString();
 
-        System.out.println(returning);
-        return returning+" || Took "+(System.currentTimeMillis()-currentTime)+"ms";
-
+        //System.out.println(returning);
+        //return returning+" || Took "+(System.currentTimeMillis()-currentTime)+"ms";
+        return null;
     }
 
     @Override
